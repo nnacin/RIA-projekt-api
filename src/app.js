@@ -8,10 +8,21 @@ const readdir = require('recursive-readdir');
 const routeLoader = require('express4-route-loader');
 const debug = require('debug')('app');
 const mongoose = require('mongoose');
-const config = require('../config.json');
 const Promise = require('bluebird');
+const config = require('../config.json');
+const initAuth = require('./modules/initAuth');
+const auth = require('./modules/auth');
 
 const app = express();
+
+
+//init db
+mongoose.connect(config.mongo);
+mongoose.Promise = Promise;
+
+//get or create auth key
+initAuth.initAuth();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,12 +36,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//authentication route
+app.use('*', auth);
+
 //load all routes from ./routes
 routeLoader(app, __dirname + '/routes');
 
-//init db
-mongoose.connect(config.mongo);
-mongoose.Promise = Promise;
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

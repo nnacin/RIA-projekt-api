@@ -2,4 +2,5 @@
   "port": "80"
 , "mongo": "mongodb://localhost/pizza"
 , "mapsKey": ""
+, "auth": true
 }
