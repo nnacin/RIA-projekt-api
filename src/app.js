@@ -11,17 +11,23 @@ const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const config = require('../config.json');
 const initAuth = require('./modules/initAuth');
-const auth = require('./modules/auth');
+const auth = require('./modules/auth2');
+const passport = require('passport');
 
 const app = express();
 
+app.enable('trust proxy');
+
+
+// Use the passport package in our application
+app.use(passport.initialize());
 
 //init db
 mongoose.connect(config.mongo);
 mongoose.Promise = Promise;
 
 //get or create auth key
-initAuth.initAuth();
+//initAuth.initAuth();
 
 
 // view engine setup
@@ -37,10 +43,23 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //authentication route
-app.use('*', auth);
+//app.use('*', auth);
 
+// Use the passport package in our application
+app.use(passport.initialize());
+
+//TO-DO
 //load all routes from ./routes
-routeLoader(app, __dirname + '/routes');
+// AKO OVU LINIJU DOLE OTKOMENTIRAMO ONDA PROLAZI I BEZ AUTORIZACIJE
+//routeLoader(app, __dirname + '/routes');
+
+//u vecini primjera u ovoj liniji dole, imaju aplikacije posebni fajl koji se zove routeLoader koji pretpostavljam da radi sta i ovaj gore.. znaci
+//po meni mi ovaj routeLoader trebali nekako ugurat kao treci argument u ovu dole liniju (app.use itd)
+//zasad ostavimo tako.. pa cemo svaku rutu posebno
+app.use('/users', auth.isAuthenticated, require('./routes/index'));
+app.use('/user', auth.isAuthenticated, require('./routes/users'));
+app.use('/order', auth.isAuthenticated, require('./routes/order'));
+
 
 
 // catch 404 and forward to error handler
