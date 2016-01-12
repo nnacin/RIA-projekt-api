@@ -56,8 +56,8 @@ app.use(passport.initialize());
 //u vecini primjera u ovoj liniji dole, imaju aplikacije posebni fajl koji se zove routeLoader koji pretpostavljam da radi sta i ovaj gore.. znaci
 //po meni mi ovaj routeLoader trebali nekako ugurat kao treci argument u ovu dole liniju (app.use itd)
 //zasad ostavimo tako.. pa cemo svaku rutu posebno
-app.use('/users', auth.isAuthenticated, require('./routes/index'));
-app.use('/user', auth.isAuthenticated, require('./routes/users'));
+app.use('/', auth.isAuthenticated, require('./routes/index'));
+app.use('/users', auth.isAuthenticated, require('./routes/users'));
 app.use('/order', auth.isAuthenticated, require('./routes/order'));
 
 
