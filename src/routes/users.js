@@ -22,8 +22,11 @@ router.post('/users', (req, res, next) => {
   if (password != password2)
     return res.status(400).json(err(400, 3, 'Passwords do not match!'));
 
+  if (password.length < 6)
+    return res.status(400).json(err(400, 4, 'Password must be at least 6 characters long!'));
+
   if (isNaN(Date.parse(birthday)))
-    return res.status(400).json(err(400, 4, 'Birthday is not a valid date! Must be YYYY-MM-DD!'));
+    return res.status(400).json(err(400, 5, 'Birthday is not a valid date! Must be YYYY-MM-DD!'));
 
   User.count({ username: username }).exec()
   .then( user => {
@@ -48,7 +51,7 @@ router.post('/users', (req, res, next) => {
   })
   .catch(e => {
     debug('error', e);
-    res.status(400).json(err(400, 5, e));
+    res.status(400).json(err(400, 6, e));
   })
 });
 
