@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/users');
-const debug = require('debug')('route:users');
+const debug = require('debug')('route:user');
 const err = require('../modules/errors');
 
 // GET users listing
@@ -31,8 +31,8 @@ router.post('/users', (req, res, next) => {
   User.count({ username: username }).exec()
   .then( user => {
     if (user != 0) {
-      debug('err', user)
-      throw 'Username already in use!'
+      debug('err', user);
+      throw 'Username already in use!';
     }
 
     debug('Adding new user', username);
@@ -44,10 +44,10 @@ router.post('/users', (req, res, next) => {
               , password:   password
               , birthday:   new Date(birthday)
           })
-      model.save(e => {
-        if (e) throw e;
-        return res.json({ 'success': `${req.body.username} has been created!` });
-      });
+    model.save(e => {
+      if (e) throw e;
+      return res.json({ 'success': `${req.body.username} has been created!` });
+    });
   })
   .catch(e => {
     debug('error', e);

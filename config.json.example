@@ -1,6 +1,6 @@
 {
-  "port": "80"
+  "port": ""
 , "mongo": "mongodb://localhost/pizza"
 , "mapsKey": ""
-, "auth": true
+, "auth": false
 }
