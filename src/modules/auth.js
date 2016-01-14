@@ -1,25 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const config = require('../../config');
-const Auth = require('../models/auth');
+const passport = require('passport');
+const BasicStrategy = require('passport-http').BasicStrategy;
+const creds = require('../../creds');
 const debug = require('debug')('auth');
 
-router.all('*', (req, res, next) => {
-  if (!config.auth) return next();
-  debug('Validating connection');
+passport.use(new BasicStrategy(
+  function(username, password, callback) {
+    debug('checking');
+    if (username === creds.username && password === creds.password) {
+      return callback(null, {
+        username: 'ria'
+      });
+    } else {
+      debug('fail auth');
+      return callback(null, false);
+    }
+  }
+));
 
-  let key = req.body.key || req.query.key;
-  if (!key)
-    return res.status(401).json({ 	'error': 'Unauthorized!' });
-  debug(key);
-  Auth.findOne().exec()
-  .then(k => {
-    if (!k) throw key;
-    if (k.key != key) return res.status(403).json({ 	'error': 'Forbidden!' });
-    return next();
-  })
-
-
-});
-
-module.exports = router;
+exports.isAuthenticated = passport.authenticate('basic', { session : false });
