@@ -10,16 +10,9 @@ const orderSchema = mongoose.model('Order', {
   , city:     String
   , zipCode:  Number
   }
-, items:      [Mixed]
-, status:     {
-    type:     String
-  , validate: {
-      validator: (v) => {
-        return /preparing|ready|delivering|completed/i.test(v);
-      }
-  , message: '{VALUE} is not a valid status!'
-  }
-, dateCreated: { type: Date, default: Date.now }
+, items:        [Mixed]
+, dateCreated:  { type: Date, default: Date.now }
+, dateFinished: type: Date
 }
 });
 

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const locationSchema = mongoose.model('Location', {
   name:  	    String
 , address:    String
+, city:       String
 , zipCode:    Number
 , dateOpened: { type: Date, default: Date.now }
 , workHours:  {
