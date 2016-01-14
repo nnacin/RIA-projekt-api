@@ -60,11 +60,11 @@ router.put('/pizza', (req, res, next) => {
   if (!(id && name && price && ingredients))
     return res.status(400).json(err(400, 1, 'All fields are required!'));
 
-  if (isNaN(price))
-    return res.status(400).json(err(400, 2, 'Price must be a number!'));
-
   if (id.length !== 24)
-    return res.status(400).json(err(400, 3, 'Invalid id!'));
+    return res.status(400).json(err(400, 2, 'Invalid id!'));
+
+  if (isNaN(price))
+    return res.status(400).json(err(400, 3, 'Price must be a number!'));
 
   if (!ingredients.length)
     return res.status(400).json(err(400, 4, 'You must provide at least one ingredient!'));
