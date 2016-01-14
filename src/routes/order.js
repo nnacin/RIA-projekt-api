@@ -32,7 +32,7 @@ router.post('/order', (req, res, next) => {
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (user.length !== 24)
-    return res.status(400).json(err(400, 2, 'Invalid id!'));
+    return res.status(400).json(responder(400, 2, 'Invalid id!'));
 
   User.count({ _id: user }).exec()
   .then(c => {

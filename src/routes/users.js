@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/users');
 const debug = require('debug')('route:user');
-const err = require('../modules/errors');
+const responder = require('../modules/responder');
 
 // GET users listing
 router.get('/users', (req, res, next) => {
@@ -14,19 +14,19 @@ router.get('/users', (req, res, next) => {
 router.post('/users', (req, res, next) => {
   let {firstName, lastName, username, email, password, password2, birthday} = req.body;
   if (!(firstName && lastName && username && email && password && password2 && birthday))
-    return res.status(400).json(err(400, 1, 'All fields are required!'));
+    return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (username.length < 6)
-    return res.status(400).json(err(400, 2, 'Username must be at least 6 characters long!'));
+    return res.status(400).json(responder(400, 2, 'Username must be at least 6 characters long!'));
 
   if (password != password2)
-    return res.status(400).json(err(400, 3, 'Passwords do not match!'));
+    return res.status(400).json(responder(400, 3, 'Passwords do not match!'));
 
   if (password.length < 6)
-    return res.status(400).json(err(400, 4, 'Password must be at least 6 characters long!'));
+    return res.status(400).json(responder(400, 4, 'Password must be at least 6 characters long!'));
 
   if (isNaN(Date.parse(birthday)))
-    return res.status(400).json(err(400, 5, 'Birthday is not a valid date! Must be YYYY-MM-DD!'));
+    return res.status(400).json(responder(400, 5, 'Birthday is not a valid date! Must be YYYY-MM-DD!'));
 
   User.count({ username: username }).exec()
   .then( user => {
@@ -46,12 +46,12 @@ router.post('/users', (req, res, next) => {
           })
     model.save(e => {
       if (e) throw e;
-      return res.json({ 'success': `${req.body.username} has been created!` });
+      return res.json(responder(200, 0, `${req.body.username} has been created!`));
     });
   })
   .catch(e => {
     debug('error', e);
-    res.status(400).json(err(400, 6, e));
+    res.status(400).json(responder(400, 6, e));
   })
 });
 

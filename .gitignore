@@ -1,4 +1,5 @@
 node_modules
 config.json
+creds.json
 lib
 npm-debug.log

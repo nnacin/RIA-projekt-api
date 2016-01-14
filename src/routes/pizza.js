@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Pizza = require('../models/pizzas');
 const debug = require('debug')('route:pizza');
-const err = require('../modules/errors');
+const responder = require('../modules/responder');
 
 router.get('/pizza', (req, res, next) => {
   let {id} = req.query;
@@ -23,13 +23,13 @@ router.get('/pizza', (req, res, next) => {
 router.post('/pizza', (req, res, next) => {
   let {name, price, ingredients} = req.body;
   if (!(name && price && ingredients))
-    return res.status(400).json(err(400, 1, 'All fields are required!'));
+    return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (isNaN(price))
-    return res.status(400).json(err(400, 2, 'Price must be a number!'));
+    return res.status(400).json(responder(400, 2, 'Price must be a number!'));
 
   if (!ingredients.length)
-    return res.status(400).json(err(400, 3, 'You must provide at least one ingredient!'));
+    return res.status(400).json(responder(400, 3, 'You must provide at least one ingredient!'));
 
   Pizza.count({ name: name }).exec()
   .then(count => {
@@ -45,12 +45,12 @@ router.post('/pizza', (req, res, next) => {
     })
     model.save(e => {
       if (e) throw e;
-      return res.json({ 'success': `${name} has been created!` });
+      return res.json(responder(200, 0, `${name} has been created!`));
     });
   })
   .catch(e => {
     debug('error', e);
-    res.status(400).json(err(400, 3, e));
+    res.status(400).json(responder(400, 3, e));
   })
 
 });
@@ -58,16 +58,16 @@ router.post('/pizza', (req, res, next) => {
 router.put('/pizza', (req, res, next) => {
   let {id, name, price, ingredients} = req.body;
   if (!(id && name && price && ingredients))
-    return res.status(400).json(err(400, 1, 'All fields are required!'));
+    return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (id.length !== 24)
-    return res.status(400).json(err(400, 2, 'Invalid id!'));
+    return res.status(400).json(responder(400, 2, 'Invalid id!'));
 
   if (isNaN(price))
-    return res.status(400).json(err(400, 3, 'Price must be a number!'));
+    return res.status(400).json(responder(400, 3, 'Price must be a number!'));
 
   if (!ingredients.length)
-    return res.status(400).json(err(400, 4, 'You must provide at least one ingredient!'));
+    return res.status(400).json(responder(400, 4, 'You must provide at least one ingredient!'));
 
   Pizza.update({ _id: id }, { name: name, price: price, ingredients: ingredients }).exec()
   .then(r => {

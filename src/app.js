@@ -17,9 +17,6 @@ const app = express();
 
 app.enable('trust proxy');
 
-// Use the passport package in our application
-app.use(passport.initialize());
-
 //init db
 mongoose.connect(config.mongo);
 mongoose.Promise = Promise;
@@ -28,7 +25,6 @@ mongoose.Promise = Promise;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -36,8 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// Use the passport package in our application
+//passport init
 app.use(passport.initialize());
 app.all('*', auth.isAuthenticated, (req, res, next) => { next() });
 
