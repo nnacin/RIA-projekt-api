@@ -10,6 +10,23 @@ router.get('/users', (req, res, next) => {
   res.json({ 'user': 'This is a user page!' });
 });
 
+router.get('/users/:user_id', (req,res,next) => {
+  var id = require('mongodb').ObjectID(req.params.user_id);
+  User.findOne({ '_id' :  id }, function(err, user) {
+    // if there are any errors, return the error before anything else
+    if (err)
+      return res.json({ 'message': 'error' });
+  
+    // if no user is found, return the message
+    if (!user)
+      return res.json({'message': 'No user found.'}); // req.flash is the way to set flashdata using connect-flash
+  
+    // all is well, return successful user
+    return res.json(user);
+  });
+  
+})
+
 //register new user
 router.post('/users', (req, res, next) => {
   let {firstName, lastName, username, email, password, password2, birthday} = req.body;

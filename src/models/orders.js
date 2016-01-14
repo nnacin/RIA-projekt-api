@@ -12,8 +12,7 @@ const orderSchema = mongoose.model('Order', {
   }
 , items:        [Mixed]
 , dateCreated:  { type: Date, default: Date.now }
-, dateFinished: type: Date
-}
+, dateFinished: { type: Date }
 });
 
 export default orderSchema;
