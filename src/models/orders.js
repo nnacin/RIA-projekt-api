@@ -11,6 +11,7 @@ const orderSchema = mongoose.model('Order', {
   , zipCode:  Number
   }
 , items:        [Mixed]
+, total:        Number
 , dateCreated:  { type: Date, default: Date.now }
 , dateFinished: { type: Date }
 });

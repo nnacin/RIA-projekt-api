@@ -10,6 +10,7 @@ const debug = require('debug')('app');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const config = require('../config.json');
+const initAdmin = require('./modules/initAdmin')
 const auth = require('./modules/auth');
 const passport = require('passport');
 
@@ -35,6 +36,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //passport init
 app.use(passport.initialize());
 app.all('*', auth.isAuthenticated, (req, res, next) => { next() });
+
+//init admin account
+initAdmin();
 
 //load all routes from ./routes
 routeLoader(app, __dirname + '/routes');

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const Pizza = require('../models/pizzas');
 const debug = require('debug')('route:pizza');
 const responder = require('../modules/responder');

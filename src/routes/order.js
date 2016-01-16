@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const Order = require('../models/orders');
 const User = require('../models/users');
 const debug = require('debug')('route:order');

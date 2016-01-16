@@ -7,7 +7,8 @@ const employeeSchema = mongoose.model('Employee', {
 , email:      String
 , password:   String
 , dateJoined: { type: Date, default: Date.now }
-, active: 	  Boolean
+, active: 	  { type: Boolean, default: true }
+, admin:      { type: Boolean, default: false }
 });
 
 export default employeeSchema;

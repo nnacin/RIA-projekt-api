@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const User = require('../models/users');
 const debug = require('debug')('route:user');
 const responder = require('../modules/responder');
@@ -16,15 +15,15 @@ router.get('/users/:user_id', (req,res,next) => {
     // if there are any errors, return the error before anything else
     if (err)
       return res.json({ 'message': 'error' });
-  
+
     // if no user is found, return the message
     if (!user)
       return res.json({'message': 'No user found.'}); // req.flash is the way to set flashdata using connect-flash
-  
+
     // all is well, return successful user
     return res.json(user);
   });
-  
+
 })
 
 //register new user
