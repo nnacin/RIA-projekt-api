@@ -65,15 +65,6 @@ router.put('/employee', (req, res, next) => {
   if (!(id, firstName && lastName && username && email && password && password2))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
-  if (username.length < 6)
-    return res.status(400).json(responder(400, 2, 'Username must be at least 6 characters long!'));
-
-  if (password != password2)
-    return res.status(400).json(responder(400, 3, 'Passwords do not match!'));
-
-  if (password.length < 6)
-    return res.status(400).json(responder(400, 4, 'Password must be at least 6 characters long!'));
-
   Employee.update({ _id: id }, {firstName: firstName, lastName: lastName}).exec()
   .then(r => {
     return res.json(responder(200, 0, r));

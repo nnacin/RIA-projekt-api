@@ -6,6 +6,7 @@ const userSchema = mongoose.model('User', {
 , username:   String
 , email:      String
 , password:   String
+, phone:      String
 , birthday:   Date
 , location:   {
     address:  String

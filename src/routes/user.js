@@ -5,11 +5,11 @@ const debug = require('debug')('route:user');
 const responder = require('../modules/responder');
 
 // GET users listing
-router.get('/users', (req, res, next) => {
+router.get('/user', (req, res, next) => {
   res.json({ 'user': 'This is a user page!' });
 });
 
-router.get('/users/:user_id', (req,res,next) => {
+router.get('/user/:user_id', (req,res,next) => {
   var id = require('mongodb').ObjectID(req.params.user_id);
   User.findOne({ '_id' :  id }, function(err, user) {
     // if there are any errors, return the error before anything else
@@ -27,9 +27,9 @@ router.get('/users/:user_id', (req,res,next) => {
 })
 
 //register new user
-router.post('/users', (req, res, next) => {
-  let {firstName, lastName, username, email, password, password2, birthday} = req.body;
-  if (!(firstName && lastName && username && email && password && password2 && birthday))
+router.post('/user', (req, res, next) => {
+  let {firstName, lastName, username, email, password, password2, phone, birthday} = req.body;
+  if (!(firstName && lastName && username && email && password && password2 && phone && birthday))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (username.length < 6)
@@ -58,6 +58,7 @@ router.post('/users', (req, res, next) => {
               , username:   username
               , email:      email
               , password:   password
+              , phone:      phone
               , birthday:   new Date(birthday)
           })
     model.save(e => {
@@ -69,6 +70,17 @@ router.post('/users', (req, res, next) => {
     debug('error', e);
     res.status(400).json(responder(400, 6, e));
   })
+});
+
+router.put('/user', (req, res, next) => {
+  let {id, firstName, lastName, phone} = req.body;
+  if (!(id && firstName && lastName && phone))
+    return res.status(400).json(responder(400, 1, 'All fields are required!'));
+
+  User.update({ _id: id }, {firstName: firstName, lastName: lastName, phone: phone}).exec()
+  .then(r => {
+    return res.json(responder(200, 0, r));
+  });
 });
 
 module.exports = router;
