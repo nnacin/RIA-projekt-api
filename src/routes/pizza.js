@@ -74,4 +74,19 @@ router.put('/pizza', (req, res, next) => {
     return res.json(r);
   });
 });
+
+router.delete('/pizza', (req, res, next) => {
+  let {id} = req.body;
+  if (!id)
+    return res.status(400).json(responder(400, 1, 'You must provide an id!'));
+
+  if (id.length !== 24)
+    return res.status(400).json(responder(400, 2, 'Invalid id!'));
+
+  Pizza.remove({ _id: id }).exec()
+  .then(r => {
+    return res.json(responder(200, 0, r));
+  });
+});
+
 module.exports = router;

@@ -45,7 +45,7 @@ router.post('/drink', (req, res, next) => {
     })
     model.save(e => {
       if (e) throw e;
-      return res.json(responder(400, 3, `${name} (${quantity}l) has been created!`));
+      return res.json(responder(400, 0, `${name} (${quantity}l) has been created!`));
     });
   })
   .catch(e => {
@@ -71,7 +71,22 @@ router.put('/drink', (req, res, next) => {
 
   Drink.update({ _id: id }, { name: name, price: price, quantity: quantity }).exec()
   .then(r => {
-    return res.json(r);
+    return res.json(responder(200, 0, r));
   });
 });
+
+router.delete('/drink', (req, res, next) => {
+  let {id} = req.body;
+  if (!id)
+    return res.status(400).json(responder(400, 1, 'You must provide an id!'));
+
+  if (id.length !== 24)
+    return res.status(400).json(responder(400, 2, 'Invalid id!'));
+
+  Drink.remove({ _id: id }).exec()
+  .then(r => {
+    return res.json(responder(200, 0, r));
+  });
+});
+
 module.exports = router;
