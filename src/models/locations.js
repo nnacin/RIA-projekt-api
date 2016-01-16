@@ -8,32 +8,32 @@ const locationSchema = mongoose.model('Location', {
 , dateOpened: { type: Date, default: Date.now }
 , workHours:  {
     monday:     {
-      open:     { type: Number, min: 0000, max: 2400 },
-      close:    { type: Number, min: 0000, max: 2400 }
+      open:     String,
+      close:    String
     }
   , tuesday:    {
-      open:     { type: Number, min: 0000, max: 2400 },
-      close:    { type: Number, min: 0000, max: 2400 }
+      open:     String,
+      close:    String
     }
   , wednesday:  {
-      open:     { type: Number, min: 0000, max: 2400 },
-      close:    { type: Number, min: 0000, max: 2400 }
+      open:     String,
+      close:    String
     }
   , thursday:   {
-      open:     { type: Number, min: 0000, max: 2400 },
-      close:    { type: Number, min: 0000, max: 2400 }
+      open:     String,
+      close:    String
     }
   , friday:     {
-      open:     { type: Number, min: 0000, max: 2400 },
-      close:    { type: Number, min: 0000, max: 2400 }
+      open:     String,
+      close:    String
     }
   , saturday:   {
-      open:     { type: Number, min: 0000, max: 2400 },
-      close:    { type: Number, min: 0000, max: 2400 }
+      open:     String,
+      close:    String
     }
   , sunday:     {
-      open:     { type: Number, min: 0000, max: 2400 },
-      close:    { type: Number, min: 0000, max: 2400 }
+      open:     String,
+      close:    String
     }
 }
 });
