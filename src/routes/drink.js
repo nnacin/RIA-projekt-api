@@ -6,17 +6,14 @@ const responder = require('../modules/responder');
 
 router.get('/drink', (req, res, next) => {
   let {id} = req.query;
-  if (!id) {
-    Drink.find({}).exec()
-    .then(drinks => {
-      return res.json(drinks);
-    })
-  } else {
-    Drink.find({ _id: id }, { __v: 0 }).exec()
-    .then(drinks => {
-      return res.json(drinks);
-    })
-  }
+  let query = {}
+  let labels = { __v: 0 }
+  if (id)
+    query = { _id: id };
+  Drink.find(query, labels).exec()
+  .then(drinks => {
+    return res.json(drinks);
+  })
 });
 
 router.post('/drink', (req, res, next) => {

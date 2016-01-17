@@ -7,22 +7,17 @@ const responder = require('../modules/responder');
 
 router.get('/order', (req, res, next) => {
   let {user, id} = req.query;
-  if (!user && !id) {
-    Order.find({ status: { $ne: 'completed' } }).exec()
-    .then(r => {
-      return res.json(responder(200, 0, r));
-    })
-  } else if (user) {
-    Order.find({ user: user }).exec()
-    .then(r => {
-      return res.json(responder(200, 0, r));
-    })
-  } else if (id) {
-    Order.find({ _id: id }).exec()
-    .then(r => {
-      return res.json(responder(200, 0, r));
-    })
-  }
+  let query = {};
+  if (!user && !id)
+    query = { status: { $ne: 'completed' } };
+  else if (user)
+    query = { user: user };
+  else if (id)
+    query = { _id: id };
+  Order.find(query).exec()
+  .then(r => {
+    return res.json(responder(200, 0, r));
+  })
 });
 
 router.post('/order', (req, res, next) => {

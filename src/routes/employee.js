@@ -62,7 +62,7 @@ router.post('/employee', (req, res, next) => {
 
 router.put('/employee', (req, res, next) => {
   let {id, firstName, lastName, username, email, password, password2} = req.body;
-  if (!(id, firstName && lastName && username && email && password && password2))
+  if (!(id && firstName && lastName && username && email && password && password2))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   Employee.update({ _id: id }, {firstName: firstName, lastName: lastName}).exec()
