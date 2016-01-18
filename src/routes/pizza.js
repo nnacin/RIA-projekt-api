@@ -8,7 +8,7 @@ router.get('/pizza', (req, res, next) => {
   let {id} = req.query;
   let query = {};
   let labels = {};
-  if (!id) {
+  if (!id)
     labels = { _id: 1, name: 1, price: 1 };
   else {
     query = { _id: id };
