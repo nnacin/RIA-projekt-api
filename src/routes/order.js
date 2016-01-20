@@ -18,11 +18,18 @@ router.get('/order', (req, res, next) => {
   .then(r => {
     return res.json(responder(200, 0, r));
   })
+  .catch(e => {
+    debug(e);
+    if (e.name === 'CastError')
+      return res.status(400).json(responder(400, 1, 'Invalid id'));
+    else
+      return res.status(400).json(responder(400, 1, e));
+  })
 });
 
 router.post('/order', (req, res, next) => {
-  let {user, location, items} = req.body;
-  if (!(user && items))
+  let {user, location, deliveryLocation, items, total} = req.body;
+  if (!(user && items && location && total))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (user.length !== 24)
@@ -35,8 +42,9 @@ router.post('/order', (req, res, next) => {
     let model = new Order ({
                 user: user
               , location: location
+              , deliveryLocation: deliveryLocation
               , items: items
-              , status: 'preparing'
+              , total: total
     });
     model.save(e => {
       if (e) throw e;

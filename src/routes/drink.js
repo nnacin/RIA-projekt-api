@@ -14,6 +14,13 @@ router.get('/drink', (req, res, next) => {
   .then(drinks => {
     return res.json(drinks);
   })
+  .catch(e => {
+    debug(e);
+    if (e.name === 'CastError')
+      return res.status(400).json(responder(400, 1, 'Invalid id'));
+    else
+      return res.status(400).json(responder(400, 2, e));
+  })
 });
 
 router.post('/drink', (req, res, next) => {

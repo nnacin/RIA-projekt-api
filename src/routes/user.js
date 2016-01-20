@@ -1,35 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/users');
+const utils = require('../modules/utils');
+const moment = require('moment');
 const debug = require('debug')('route:user');
 const responder = require('../modules/responder');
 
-// GET users listing
-router.get('/user', (req, res, next) => {
-  res.json({ 'user': 'This is a user page!' });
-});
+router.get('/user', (req,res,next) => {
+  let {id} = req.query;
+  if (!id)
+    return res.status(400).json(responder(400, 1, 'You must provide a user id!'));
 
-router.get('/user/:user_id', (req,res,next) => {
-  var id = require('mongodb').ObjectID(req.params.user_id);
-  User.findOne({ '_id' :  id }, function(err, user) {
-    // if there are any errors, return the error before anything else
-    if (err)
-      return res.json({ 'message': 'error' });
+  if (id.length !== 24)
+    return res.status(400).json(responder(400, 2, 'Invalid id!'));
 
-    // if no user is found, return the message
-    if (!user)
-      return res.json({'message': 'No user found.'}); // req.flash is the way to set flashdata using connect-flash
-
-    // all is well, return successful user
-    return res.json(user);
-  });
-
+  User.find({ _id: id }, { __v: 0, password: 0 }).exec()
+  .then(em => {
+    return res.json(em);
+  })
 })
 
-//register new user
 router.post('/user', (req, res, next) => {
-  let {firstName, lastName, username, email, password, password2, phone, birthday} = req.body;
-  if (!(firstName && lastName && username && email && password && password2 && phone && birthday))
+  let {firstName, lastName, username, email, password, password2, phone, birthday, address, city, zipCode} = req.body;
+  if (!(firstName && lastName && username && email && password && password2 && phone && birthday && address && city && zipCode))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (username.length < 6)
@@ -41,11 +34,14 @@ router.post('/user', (req, res, next) => {
   if (password.length < 6)
     return res.status(400).json(responder(400, 4, 'Password must be at least 6 characters long!'));
 
-  if (isNaN(Date.parse(birthday)))
-    return res.status(400).json(responder(400, 5, 'Birthday is not a valid date! Must be YYYY-MM-DD!'));
+  if (!utils.valBirthday(birthday))
+    return res.status(400).json(responder(400, 5, 'Birthday is not a valid date! Must be DD-MM-YYYY!'));
+
+  if (isNaN(zipCode))
+    return res.status(400).json(responder(400, 6, 'Zip code must be a number!'));
 
   User.count({ username: username }).exec()
-  .then( user => {
+  .then(user => {
     if (user != 0) {
       debug('err', user);
       throw 'Username already in use!';
@@ -59,25 +55,40 @@ router.post('/user', (req, res, next) => {
               , email:      email
               , password:   password
               , phone:      phone
-              , birthday:   new Date(birthday)
+              , birthday:   moment(birthday, 'DD-MM-YYYY')
+              , location: {
+                    address:  address
+                  , city:     city
+                  , zipCode:  zipCode
+              }
           })
     model.save(e => {
       if (e) throw e;
-      return res.json(responder(200, 0, `${req.body.username} has been created!`));
+      return res.json(responder(200, 0, `${username} has been created!`));
     });
   })
   .catch(e => {
     debug('error', e);
-    res.status(400).json(responder(400, 6, e));
+    res.status(400).json(responder(400, 7, e));
   })
 });
 
 router.put('/user', (req, res, next) => {
-  let {id, firstName, lastName, phone} = req.body;
+  let {id, firstName, lastName, phone, address, city, zipCode} = req.body;
   if (!(id && firstName && lastName && phone))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
-  User.update({ _id: id }, {firstName: firstName, lastName: lastName, phone: phone}).exec()
+  if (id.length !== 24)
+    return res.status(400).json(responder(400, 2, 'Invalid id!'));
+
+  User.update({ _id: id }, {firstName: firstName
+                          , lastName: lastName
+                          , phone: phone
+                          , location: {
+                              address: address
+                            , city: city
+                            , zipCode: zipCode
+                          } }).exec()
   .then(r => {
     return res.json(responder(200, 0, r));
   });

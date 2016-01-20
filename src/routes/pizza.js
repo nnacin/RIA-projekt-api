@@ -7,16 +7,19 @@ const responder = require('../modules/responder');
 router.get('/pizza', (req, res, next) => {
   let {id} = req.query;
   let query = {};
-  let labels = {};
-  if (!id)
-    labels = { _id: 1, name: 1, price: 1 };
-  else {
+  let labels = { __v: 0 };;
+  if (id)
     query = { _id: id };
-    labels = { __v: 0 };
-  }
   Pizza.find(query, labels).exec()
   .then(pizzas => {
     return res.json(pizzas);
+  })
+  .catch(e => {
+    debug(e);
+    if (e.name === 'CastError')
+      return res.status(400).json(responder(400, 1, 'Invalid id'));
+    else
+      return res.status(400).json(responder(400, 2, e));
   })
 });
 

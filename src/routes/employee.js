@@ -7,23 +7,27 @@ const responder = require('../modules/responder');
 router.get('/employee', (req, res, next) => {
   let {id} = req.query;
   let query, labels = {}
-  if (!id) {
-    query = {};
-    labels = { _id: 1, name: 1, lastName: 1, username: 1, active: 1 }
-  } else {
+  if (id) {
     query = { _id: id };
     labels = { __v: 0, password: 0 };
-  }
-  Employee.find(query, labels).exec()
+  } else
+    labels = { _id: 1, name: 1, lastName: 1, username: 1, active: 1 }
+  Employee.find(query, labels).sort({ active: 'desc' }).populate('location').exec()
   .then(em => {
     return res.json(em);
   })
+  .catch(e => {
+    debug(e);
+    if (e.name === 'CastError')
+      return res.status(400).json(responder(400, 1, 'Invalid id'));
+    else
+      return res.status(400).json(responder(400, 2, e));
+  })
 });
 
-//register new employee
 router.post('/employee', (req, res, next) => {
-  let {firstName, lastName, username, email, password, password2} = req.body;
-  if (!(firstName && lastName && username && email && password && password2))
+  let {firstName, lastName, username, email, password, password2, location} = req.body;
+  if (!(firstName && lastName && username && email && password && password2 && location))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (username.length < 6)
@@ -34,6 +38,9 @@ router.post('/employee', (req, res, next) => {
 
   if (password.length < 6)
     return res.status(400).json(responder(400, 4, 'Password must be at least 6 characters long!'));
+
+  if (location.length !== 24)
+    return res.status(400).json(responder(400, 2, 'Invalid location!'));
 
   Employee.count({ username: username }).exec()
   .then(user => {
@@ -48,6 +55,7 @@ router.post('/employee', (req, res, next) => {
               , username:   username
               , email:      email
               , password:   password
+              , location:   location
           })
     model.save(e => {
       if (e) throw e;
@@ -61,11 +69,17 @@ router.post('/employee', (req, res, next) => {
 });
 
 router.put('/employee', (req, res, next) => {
-  let {id, firstName, lastName, username, email, password, password2} = req.body;
-  if (!(id && firstName && lastName && username && email && password && password2))
+  let {id, firstName, lastName, location, active} = req.body;
+  if (!(id && firstName && lastName && location && active))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
-  Employee.update({ _id: id }, {firstName: firstName, lastName: lastName}).exec()
+  if (id.length !== 24)
+    return res.status(400).json(responder(400, 2, 'Invalid id!'));
+
+  if (location.length !== 24)
+    return res.status(400).json(responder(400, 2, 'Invalid location id!'));
+
+  Employee.update({ _id: id }, {firstName: firstName, lastName: lastName, location: location, active: active}).exec()
   .then(r => {
     return res.json(responder(200, 0, r));
   });

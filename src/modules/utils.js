@@ -1,7 +1,7 @@
 const moment = require('moment');
 const debug = require("debug")("utils");
 
-function utils (workHours) {
+export function valWH (workHours) {
   try {
     let check = [];
     check.push(moment(workHours.monday.open, "HH:mm", true).isValid());
@@ -30,4 +30,6 @@ function utils (workHours) {
   return false;
 }
 
-module.exports = utils;
+export function valBirthday (birthday) {
+  return moment(birthday, "DD-MM-YYYY", true).isValid();
+}

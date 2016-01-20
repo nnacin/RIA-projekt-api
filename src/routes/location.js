@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const checkWH = require('../modules/utils');
+const utils = require('../modules/utils');
 const Location = require('../models/locations');
 const debug = require('debug')('route:location');
 const responder = require('../modules/responder');
@@ -8,16 +8,22 @@ const responder = require('../modules/responder');
 router.get('/location', (req, res, next) => {
   let {id} = req.query;
   let query, labels = {}
-  if (!id) {
-    query = {};
+  if (!id)
     labels = { _id: 1, name: 1, address: 1, city: 1, zipCode: 1 }
-  } else {
+  else {
     query = { _id: id };
     labels = { __v: 0 };
   }
   Location.find(query, labels).exec()
-  .then(pizzas => {
-    return res.json(pizzas);
+  .then(loc => {
+    return res.json(loc);
+  })
+  .catch(e => {
+    debug(e);
+    if (e.name === 'CastError')
+      return res.status(400).json(responder(400, 1, 'Invalid id'));
+    else
+      return res.status(400).json(responder(400, 1, e));
   })
 });
 
@@ -29,7 +35,7 @@ router.post('/location', (req, res, next) => {
   if (isNaN(zipCode))
     return res.status(400).json(responder(400, 2, 'Zip code must be a number!'));
 
-  let cwh = checkWH(workHours);
+  let cwh = utils.valWH(workHours);
   if (cwh)
     return res.status(400).json(responder(400, 3, cwh));
 
