@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
 const Order = require('../models/orders');
 const User = require('../models/users');
 const debug = require('debug')('route:order');
@@ -9,7 +10,7 @@ router.get('/order', (req, res, next) => {
   let {user, id} = req.query;
   let query = {};
   if (!user && !id)
-    query = { status: { $ne: 'completed' } };
+    query = { dateFinished: { $gte: moment() } };
   else if (user)
     query = { user: user };
   else if (id)
@@ -28,8 +29,8 @@ router.get('/order', (req, res, next) => {
 });
 
 router.post('/order', (req, res, next) => {
-  let {user, location, deliveryLocation, items, total} = req.body;
-  if (!(user && items && location && total))
+  let {user, location, deliveryLocation, items, total, dateFinished} = req.body;
+  if (!(user && items && location && total && dateFinished))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (user.length !== 24)
@@ -45,6 +46,7 @@ router.post('/order', (req, res, next) => {
               , deliveryLocation: deliveryLocation
               , items: items
               , total: total
+              , dateFinished: dateFinished
     });
     model.save(e => {
       if (e) throw e;

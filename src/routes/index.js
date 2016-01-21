@@ -4,10 +4,13 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   res.json({
     'welcome': 'This is a pizza api!'
-  , 'users': 'GET, POST, PUT'
-  , 'pizza': 'GET, POST, PUT'
-  , 'drink': 'GET, POST, PUT'
-  , 'order': 'GET, POST, PUT'
+  , 'status': 'OK'
+  , 'user': 'GET, POST, PUT'
+  , 'pizza': 'GET, POST, PUT, DELETE'
+  , 'drink': 'GET, POST, PUT, DELETE'
+  , 'order': 'GET, POST'
+  , 'employee': 'GET, POST, PUT'
+  , 'location': 'GET, POST, PUT, DELETE'
   });
 });
 

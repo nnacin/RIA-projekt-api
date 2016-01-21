@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const employeeSchema = mongoose.model('employee', {
+const employeeSchema = mongoose.model('Employee', {
   firstName:  String
 , lastName:   String
 , username:   String
