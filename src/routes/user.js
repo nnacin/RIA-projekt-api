@@ -37,7 +37,7 @@ router.post('/user', (req, res, next) => {
   if (!utils.valBirthday(birthday))
     return res.status(400).json(responder(400, 5, 'Birthday is not a valid date! Must be DD-MM-YYYY!'));
 
-  if (isNaN(zipCode))
+  if (!utils.isNumeric(zipCode))
     return res.status(400).json(responder(400, 6, 'Zip code must be a number!'));
 
   User.count({ username: username }).exec()
@@ -80,6 +80,9 @@ router.put('/user', (req, res, next) => {
 
   if (id.length !== 24)
     return res.status(400).json(responder(400, 2, 'Invalid id!'));
+
+  if (!utils.isNumeric(zipCode))
+    return res.status(400).json(responder(400, 3, 'Zip code must be a number!'));
 
   User.update({ _id: id }, {firstName: firstName
                           , lastName: lastName

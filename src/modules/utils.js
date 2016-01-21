@@ -33,3 +33,7 @@ export function valWH (workHours) {
 export function valBirthday (birthday) {
   return moment(birthday, "DD-MM-YYYY", true).isValid();
 }
+
+export function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}

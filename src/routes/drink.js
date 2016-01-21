@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const utils = require('../modules/utils');
 const Drink = require('../models/drinks');
 const debug = require('debug')('route:drink');
 const responder = require('../modules/responder');
@@ -28,10 +29,10 @@ router.post('/drink', (req, res, next) => {
   if (!(name && price && quantity))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
-  if (isNaN(price))
+  if (!utils.isNumeric(price))
     return res.status(400).json(responder(400, 2, 'Price must be a number!'));
 
-  if (isNaN(quantity))
+  if (!utils.isNumeric(quantity))
     return res.status(400).json(responder(400, 3, 'Quantity must be a number!'));
 
   Drink.count({ name: name, quantity: quantity }).exec()
@@ -66,10 +67,10 @@ router.put('/drink', (req, res, next) => {
   if (id.length !== 24)
     return res.status(400).json(responder(400, 2, 'Invalid id!'));
 
-  if (isNaN(price))
+  if (!utils.isNumeric(price))
     return res.status(400).json(responder(400, 3, 'Price must be a number!'));
 
-  if (isNaN(quantity))
+  if (!utils.isNumeric(quantity))
     return res.status(400).json(responder(400, 4, 'Quantity must be a number!'));
 
   Drink.update({ _id: id }, { name: name, price: price, quantity: quantity }).exec()

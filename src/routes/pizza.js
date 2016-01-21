@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const utils = require('../modules/utils');
 const Pizza = require('../models/pizzas');
 const debug = require('debug')('route:pizza');
 const responder = require('../modules/responder');
@@ -28,7 +29,7 @@ router.post('/pizza', (req, res, next) => {
   if (!(name && price && ingredients))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
-  if (isNaN(price))
+  if (!utils.isNumeric(price))
     return res.status(400).json(responder(400, 2, 'Price must be a number!'));
 
   if (!ingredients.length)
@@ -66,7 +67,7 @@ router.put('/pizza', (req, res, next) => {
   if (id.length !== 24)
     return res.status(400).json(responder(400, 2, 'Invalid id!'));
 
-  if (isNaN(price))
+  if (!utils.isNumeric(price))
     return res.status(400).json(responder(400, 3, 'Price must be a number!'));
 
   if (!ingredients.length)
