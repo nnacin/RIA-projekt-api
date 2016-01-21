@@ -72,7 +72,7 @@ router.put('/location', (req, res, next) => {
   if (!utils.isNumeric(zipCode))
     return res.status(400).json(responder(400, 2, 'Zip code must be a number!'));
 
-  let cwh = checkWH(workHours);
+  let cwh = utils.valWH(workHours);
   if (cwh)
     return res.status(400).json(responder(400, 3, cwh));
 
