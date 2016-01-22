@@ -3,8 +3,8 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const Mixed = mongoose.Schema.Types.Mixed;
 
 const orderSchema = mongoose.model('Order', {
-  user:  	    { type: ObjectId, ref: 'user' }
-, location:   { type: ObjectId, ref: 'location' }
+  user:  	    { type: ObjectId, ref: 'User' }
+, location:   { type: ObjectId, ref: 'Location' }
 , deliveryLocation:   {
     address:  String
   , city:     String

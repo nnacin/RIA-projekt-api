@@ -8,7 +8,7 @@ const responder = require('../modules/responder');
 router.get('/pizza', (req, res, next) => {
   let {id} = req.query;
   let query = {};
-  let labels = { __v: 0 };;
+  let labels = { __v: 0 };
   if (id)
     query = { _id: id };
   Pizza.find(query, labels).exec()

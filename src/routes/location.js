@@ -7,13 +7,10 @@ const responder = require('../modules/responder');
 
 router.get('/location', (req, res, next) => {
   let {id} = req.query;
-  let query, labels = {}
-  if (!id)
-    labels = { _id: 1, name: 1, address: 1, city: 1, zipCode: 1 }
-  else {
+  let query = {}
+  let labels = { __v: 0 };
+  if (id)
     query = { _id: id };
-    labels = { __v: 0 };
-  }
   Location.find(query, labels).exec()
   .then(loc => {
     return res.json(loc);

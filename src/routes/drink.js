@@ -49,7 +49,7 @@ router.post('/drink', (req, res, next) => {
     })
     model.save(e => {
       if (e) throw e;
-      return res.json(responder(400, 0, `${name} (${quantity}l) has been created!`));
+      return res.json(responder(200, 0, `${name} (${quantity}l) has been created!`));
     });
   })
   .catch(e => {

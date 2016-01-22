@@ -6,7 +6,7 @@ const moment = require('moment');
 const debug = require('debug')('route:user');
 const responder = require('../modules/responder');
 
-router.get('/user', (req,res,next) => {
+router.get('/user', (req, res, next) => {
   let {id} = req.query;
   if (!id)
     return res.status(400).json(responder(400, 1, 'You must provide a user id!'));
@@ -55,7 +55,7 @@ router.post('/user', (req, res, next) => {
               , email:      email
               , password:   password
               , phone:      phone
-              , birthday:   moment(birthday, 'DD-MM-YYYY')
+              , birthday:   moment.utc(birthday, 'DD-MM-YYYY')
               , location: {
                     address:  address
                   , city:     city
