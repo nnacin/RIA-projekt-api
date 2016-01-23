@@ -5,7 +5,12 @@ const locationSchema = mongoose.model('Location', {
 , address:    String
 , city:       String
 , zipCode:    Number
+, phone:      String
 , dateOpened: { type: Date, default: Date.now }
+, coordinates:{
+    lat: Number
+  , lng: Number
+}
 , workHours:  {
     monday:     {
       open:     String,
