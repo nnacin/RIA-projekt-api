@@ -9,7 +9,7 @@ const responder = require('../modules/responder');
 router.get('/user', (req, res, next) => {
   let {id, username} = req.query;
   if (username) {
-    User.find({ username: username }, { __v: 0, password: 0 }).exec()
+    User.find({ username: username }, { __v: 0 }).exec()
     .then(em => {
       return res.json(em);
     })

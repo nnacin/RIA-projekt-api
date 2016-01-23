@@ -12,7 +12,7 @@ router.get('/employee', (req, res, next) => {
     labels = { __v: 0, password: 0 };
   } else if (username) {
     query = { username: username };
-    labels = { __v: 0, password: 0 };
+    labels = { __v: 0 };
   } else 
     labels = { _id: 1, name: 1, lastName: 1, username: 1, active: 1 }
   Employee.find(query, labels).sort({ active: 'desc' }).populate('location').exec()
