@@ -7,7 +7,13 @@ const debug = require('debug')('route:user');
 const responder = require('../modules/responder');
 
 router.get('/user', (req, res, next) => {
-  let {id} = req.query;
+  let {id, username} = req.query;
+  if (username) {
+    User.find({ username: username }, { __v: 0, password: 0 }).exec()
+    .then(em => {
+      return res.json(em);
+    })
+  }
   if (!id)
     return res.status(400).json(responder(400, 1, 'You must provide a user id!'));
 

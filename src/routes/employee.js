@@ -5,12 +5,15 @@ const debug = require('debug')('route:employee');
 const responder = require('../modules/responder');
 
 router.get('/employee', (req, res, next) => {
-  let {id} = req.query;
+  let {id, username} = req.query;
   let query, labels = {}
   if (id) {
     query = { _id: id };
     labels = { __v: 0, password: 0 };
-  } else
+  } else if (username) {
+    query = { username: username };
+    labels = { __v: 0, password: 0 };
+  } else 
     labels = { _id: 1, name: 1, lastName: 1, username: 1, active: 1 }
   Employee.find(query, labels).sort({ active: 'desc' }).populate('location').exec()
   .then(em => {

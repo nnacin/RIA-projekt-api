@@ -8,6 +8,7 @@
     "babel-start": "babel-node src/www.js"
   },
   "dependencies": {
+    "address-validator": "^0.2.2",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.1.1",
     "body-parser": "~1.13.2",
