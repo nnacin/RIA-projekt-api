@@ -9,22 +9,22 @@ const responder = require('../modules/responder');
 router.get('/user', (req, res, next) => {
   let {id, username} = req.query;
   if (username) {
+    console.log(username);
     User.find({ username: username }, { __v: 0 }).exec()
     .then(em => {
       return res.json(em);
     })
-  }
-  if (!id)
+  } else if (!id) {
     return res.status(400).json(responder(400, 1, 'You must provide a user id!'));
-
-  if (id.length !== 24)
+  } else  if (id.length !== 24) {
     return res.status(400).json(responder(400, 2, 'Invalid id!'));
-
-  User.find({ _id: id }, { __v: 0, password: 0 }).exec()
-  .then(em => {
-    return res.json(em);
-  })
-})
+  } else {
+    User.find({ _id: id }, { __v: 0, password: 0 }).exec()
+    .then(em => {
+      return res.json(em);
+    })
+  }
+});
 
 router.post('/user', (req, res, next) => {
   let {firstName, lastName, username, email, password, password2, phone, birthday, address, city, zipCode} = req.body;
