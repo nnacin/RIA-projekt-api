@@ -15,7 +15,7 @@ router.get('/order', (req, res, next) => {
     query = { user: user };
   else if (id)
     query = { _id: id };
-  Order.find(query).populate('user').exec()
+  Order.find(query).populate('user').populate('location').exec()
   .then(r => {
     return res.json(r);
   })
