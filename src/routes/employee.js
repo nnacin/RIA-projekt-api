@@ -72,8 +72,8 @@ router.post('/employee', (req, res, next) => {
 });
 
 router.put('/employee', (req, res, next) => {
-  let {id, firstName, lastName, location, active} = req.body;
-  if (!(id && firstName && lastName && location && active))
+  let {id, firstName, lastName, email, location, active, admin} = req.body;
+  if (!(id && firstName && lastName && email && location && active && admin))
     return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
   if (id.length !== 24)
@@ -82,7 +82,7 @@ router.put('/employee', (req, res, next) => {
   if (location.length !== 24)
     return res.status(400).json(responder(400, 2, 'Invalid location id!'));
 
-  Employee.update({ _id: id }, {firstName: firstName, lastName: lastName, location: location, active: active}).exec()
+  Employee.update({ _id: id }, {firstName: firstName, lastName: lastName, email: email, location: location, active: active, admin: admin}).exec()
   .then(r => {
     return res.json(responder(200, 0, r));
   });
