@@ -72,20 +72,34 @@ router.post('/employee', (req, res, next) => {
 });
 
 router.put('/employee', (req, res, next) => {
-  let {id, firstName, lastName, email, location, active, admin} = req.body;
-  if (!(id && firstName && lastName && email && location && active && admin))
-    return res.status(400).json(responder(400, 1, 'All fields are required!'));
+  let {id, firstName, lastName, email, location, active, admin, password, password2} = req.body;
+  
+  if (id && password && password2) {
+    if (password != password2)
+      return res.status(400).json(responder(400, 3, 'Passwords do not match!'));
 
-  if (id.length !== 24)
-    return res.status(400).json(responder(400, 2, 'Invalid id!'));
-
-  if (location.length !== 24)
-    return res.status(400).json(responder(400, 2, 'Invalid location id!'));
-
-  Employee.update({ _id: id }, {firstName: firstName, lastName: lastName, email: email, location: location, active: active, admin: admin}).exec()
-  .then(r => {
-    return res.json(responder(200, 0, r));
-  });
+    if (password.length < 6)
+      return res.status(400).json(responder(400, 4, 'Password must be at least 6 characters long!'));
+    
+    Employee.update({ _id: id }, {password: password}).exec()
+    .then(r => {
+      return res.json(responder(200, 0, r));
+    });
+  } else {
+    if (!(id && firstName && lastName && email && location && active && admin))
+      return res.status(400).json(responder(400, 1, 'All fields are required!'));
+  
+    if (id.length !== 24)
+      return res.status(400).json(responder(400, 2, 'Invalid id!'));
+  
+    if (location.length !== 24)
+      return res.status(400).json(responder(400, 2, 'Invalid location id!'));
+  
+    Employee.update({ _id: id }, {firstName: firstName, lastName: lastName, email: email, location: location, active: active, admin: admin}).exec()
+    .then(r => {
+      return res.json(responder(200, 0, r));
+    });
+  }
 });
 
 module.exports = router;
