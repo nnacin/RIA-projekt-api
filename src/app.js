@@ -4,7 +4,6 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const readdir = require('recursive-readdir');
 const routeLoader = require('express4-route-loader');
 const debug = require('debug')('app');
 const mongoose = require('mongoose');
