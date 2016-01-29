@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const Employee = require('../models/employees');
 const debug = require('debug')('route:initAdmin');
 
@@ -12,13 +13,17 @@ function initAdmin () {
 function createAdmin () {
   let model = new Employee({
               username:   'admin'
-            , password:   'admin'
+            , password:   createHash('admin')
             , admin:      true
         })
   model.save(e => {
     if (e) throw e;
     debug('Default admin account created!')
   });
+}
+
+var createHash = function(password){
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 }
 
 module.exports = initAdmin;
