@@ -46,7 +46,7 @@ router.post('/order', (req, res, next) => {
               , deliveryLocation: deliveryLocation
               , items: items
               , total: total
-              , dateFinished: dateFinished
+              , dateFinished: moment.utc(dateFinished, "HH:mm", true)
     });
     model.save(e => {
       if (e) throw e;
