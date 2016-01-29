@@ -42,7 +42,7 @@ router.post('/order', (req, res, next) => {
 
   if (deliveryLocation)
     if (!utils.isNumeric(deliveryLocation.zipCode))
-      return res.status(400).json(responder(400, 3, 'Zip code must be a number!'));
+      return res.status(400).json(responder(400, 4, 'Zip code must be a number!'));
 
   User.count({ _id: user }).exec()
   .then(c => {
@@ -62,7 +62,7 @@ router.post('/order', (req, res, next) => {
     })
   })
   .catch(e => {
-    return res.json(responder(400, 4, e));
+    return res.json(responder(400, 5, e));
   })
 });
 
