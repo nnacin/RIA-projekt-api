@@ -32,8 +32,8 @@ export function valWH (workHours) {
   return false;
 }
 
-export function valBirthday (birthday) {
-  return moment(birthday, "DD-MM-YYYY", true).isValid();
+export function valTime (time) {
+  return moment(time, "HH:mm", true).isValid();
 }
 
 export function isNumeric(n) {

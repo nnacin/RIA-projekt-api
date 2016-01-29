@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
+const utils = require('../modules/utils');
 const Order = require('../models/orders');
 const User = require('../models/users');
 const debug = require('debug')('route:order');
@@ -36,6 +37,13 @@ router.post('/order', (req, res, next) => {
   if (user.length !== 24)
     return res.status(400).json(responder(400, 2, 'Invalid id!'));
 
+  if (!utils.valTime(dateFinished))
+    return res.status(400).json(responder(400, 3, 'Invalid dateFinished!'));
+
+  if (deliveryLocation)
+    if (!utils.isNumeric(deliveryLocation.zipCode))
+      return res.status(400).json(responder(400, 3, 'Zip code must be a number!'));
+
   User.count({ _id: user }).exec()
   .then(c => {
     if (c < 1) throw `User ${user} does not exist!`;
@@ -54,7 +62,7 @@ router.post('/order', (req, res, next) => {
     })
   })
   .catch(e => {
-    return res.json(responder(400, 3, e));
+    return res.json(responder(400, 4, e));
   })
 });
 
