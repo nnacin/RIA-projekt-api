@@ -22,7 +22,7 @@ function createAdmin () {
   });
 }
 
-var createHash = function(password){
+let createHash = function(password){
   return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 }
 

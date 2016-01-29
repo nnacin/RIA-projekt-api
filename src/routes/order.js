@@ -16,7 +16,7 @@ router.get('/order', (req, res, next) => {
     query = { user: user };
   else if (id)
     query = { _id: id };
-  Order.find(query).populate('user').populate('location').exec()
+  Order.find(query).sort({dateCreated: 'desc'}).populate('user').populate('location').exec()
   .then(r => {
     return res.json(r);
   })
@@ -54,7 +54,7 @@ router.post('/order', (req, res, next) => {
               , deliveryLocation: deliveryLocation
               , items: items
               , total: total
-              , dateFinished: moment.utc(dateFinished, "HH:mm", true)
+              , dateFinished: moment(dateFinished, "HH:mm", true)
     });
     model.save(e => {
       if (e) throw e;
