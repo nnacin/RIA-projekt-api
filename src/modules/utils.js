@@ -40,6 +40,10 @@ export function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+export function valBirthday (birthday) {
+  return moment(birthday, "DD-MM-YYYY", true).isValid();
+}
+
 export function geocode (address, city, zipCode, callback) {
   let options = {
     uri: 'https://maps.googleapis.com/maps/api/geocode/json',
