@@ -5,6 +5,7 @@ const utils = require('../modules/utils');
 const moment = require('moment');
 const debug = require('debug')('route:user');
 const responder = require('../modules/responder');
+const bcrypt = require('bcrypt');
 
 router.get('/user', (req, res, next) => {
   let {id, username} = req.query;
@@ -59,7 +60,7 @@ router.post('/user', (req, res, next) => {
               , lastName:   lastName
               , username:   username
               , email:      email
-              , password:   password
+              , password:   createHash(password)
               , phone:      phone
               , birthday:   moment.utc(birthday, 'DD-MM-YYYY')
               , location: {
@@ -92,7 +93,7 @@ router.put('/user', (req, res, next) => {
     if (password.length < 6)
       return res.status(400).json(responder(400, 4, 'Password must be at least 6 characters long!'));
 
-    User.update({ _id: id }, {password: password}).exec()
+    User.update({ _id: id }, {password: createHash(password)}).exec()
     .then(r => {
       return res.json(responder(200, 0, r));
     });
@@ -120,5 +121,9 @@ router.put('/user', (req, res, next) => {
     });
   }
 });
+
+var createHash = function(password){
+ return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+}
 
 module.exports = router;

@@ -3,6 +3,7 @@ const router = express.Router();
 const Employee = require('../models/employees');
 const debug = require('debug')('route:employee');
 const responder = require('../modules/responder');
+const bcrypt = require('bcrypt');
 
 router.get('/employee', (req, res, next) => {
   let {id, username} = req.query;
@@ -57,7 +58,7 @@ router.post('/employee', (req, res, next) => {
               , lastName:   lastName
               , username:   username
               , email:      email
-              , password:   password
+              , password:   createHash(password)
               , location:   location
           })
     model.save(e => {
@@ -84,7 +85,7 @@ router.put('/employee', (req, res, next) => {
     if (password.length < 6)
       return res.status(400).json(responder(400, 4, 'Password must be at least 6 characters long!'));
 
-    Employee.update({ _id: id }, {password: password}).exec()
+    Employee.update({ _id: id }, {password: createHash(password)}).exec()
     .then(r => {
       return res.json(responder(200, 0, r));
     });
@@ -104,5 +105,9 @@ router.put('/employee', (req, res, next) => {
     });
   }
 });
+
+var createHash = function(password){
+ return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+}
 
 module.exports = router;
