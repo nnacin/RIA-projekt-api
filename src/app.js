@@ -12,6 +12,7 @@ const config = require('../config.json');
 const initAdmin = require('./modules/initAdmin')
 const auth = require('./modules/auth');
 const passport = require('passport');
+const responder = require('./modules/responder');
 
 const app = express();
 
@@ -20,10 +21,6 @@ app.enable('trust proxy');
 //init db
 mongoose.connect(config.mongo);
 mongoose.Promise = Promise;
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -43,35 +40,13 @@ initAdmin();
 routeLoader(app, __dirname + '/routes');
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use((req, res, next) => {
+    return res.status(404).json(responder(404));
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+if (app.get('env') === 'development')
+  app.use((err, req, res, next) => {
+    return res.status(500).json(responder(500, 0, `${err}`));
 });
-
 
 module.exports = app;

@@ -16,7 +16,6 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "express4-route-loader": "0.0.5",
-    "jade": "~1.11.0",
     "moment": "^2.11.1",
     "mongoose": "^4.3.4",
     "morgan": "~1.6.1",
