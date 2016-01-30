@@ -15,7 +15,7 @@ router.get('/employee', (req, res, next) => {
     query = { username: username };
     labels = { __v: 0 };
   } else
-    labels = { _id: 1, name: 1, lastName: 1, username: 1, active: 1 }
+    labels = { _id: 1, name: 1, lastName: 1, username: 1, active: 1, admin: 1 }
   Employee.find(query, labels).sort({ active: 'desc' }).populate('location').exec()
   .then(em => {
     return res.json(em);
