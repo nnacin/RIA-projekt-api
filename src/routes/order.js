@@ -10,9 +10,9 @@ const responder = require('../modules/responder');
 router.get('/order', (req, res, next) => {
   let {user, id} = req.query;
   let query = {};
-  if (!user && !id)
-    query = { dateFinished: { $gte: moment() } };
-  else if (user)
+  if (!user && !id) {
+    query = {};
+  } else if (user)
     query = { user: user };
   else if (id)
     query = { _id: id };
