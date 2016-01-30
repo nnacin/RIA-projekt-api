@@ -12,7 +12,8 @@ function initAdmin () {
 
 function createAdmin () {
   let model = new Employee({
-              username:   'admin'
+              firstName:  'Administrator'
+            , username:   'admin'
             , password:   createHash('admin')
             , admin:      true
         })
