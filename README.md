@@ -10,5 +10,5 @@ git clone https://github.com/nnacin/RIA-projekt-api
 cd RIA-projekt-api
 npm install
 set DEBUG=*
-npm run babel-start
+npm run babel-start (for linux without 4th step: DEBUG=* npm run babel-start)
 ```
