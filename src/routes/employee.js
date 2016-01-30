@@ -78,7 +78,7 @@ router.put('/employee', (req, res, next) => {
   if (id && password && password2) {
     if (id.length !== 24)
       return res.status(400).json(responder(400, 2, 'Invalid id!'));
-      
+
     if (password != password2)
       return res.status(400).json(responder(400, 3, 'Passwords do not match!'));
 
@@ -106,7 +106,7 @@ router.put('/employee', (req, res, next) => {
   }
 });
 
-var createHash = function(password){
+const createHash = function (password) {
  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 }
 

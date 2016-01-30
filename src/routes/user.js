@@ -98,7 +98,7 @@ router.put('/user', (req, res, next) => {
       return res.json(responder(200, 0, r));
     });
   } else {
-    
+
     if (!(id && firstName && lastName && phone))
       return res.status(400).json(responder(400, 1, 'All fields are required!'));
 
@@ -122,7 +122,7 @@ router.put('/user', (req, res, next) => {
   }
 });
 
-var createHash = function(password){
+const createHash = function (password) {
  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 }
 
